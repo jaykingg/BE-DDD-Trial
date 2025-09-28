@@ -2,7 +2,7 @@ package jayking.splearn.domain
 
 
 class Member private constructor(
-    val email: String,
+    val email: Email,
     var nickName: String,
     var passwordHash: String,
     var status: MemberStatus
@@ -38,8 +38,9 @@ class Member private constructor(
 
     companion object {
         fun create(request: MemberCreateRequest, passwordEncoder: PasswordEncoder): Member {
+
             return Member(
-                email = request.email,
+                email = Email(request.email),
                 nickName = request.nickName,
                 passwordHash = passwordEncoder.encode(request.password),
                 status = MemberStatus.PENDING

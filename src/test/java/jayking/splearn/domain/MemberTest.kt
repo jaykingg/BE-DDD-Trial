@@ -101,4 +101,11 @@ class MemberTest {
         assertThat(member.isActive()).isFalse
     }
 
+    @Test
+    fun invalidEmailTest() {
+        assertThatThrownBy { Member.create(MemberCreateRequest("jayking.kr", "jayking", "secret"), passwordEncoder) }
+            .isInstanceOf(IllegalArgumentException::class.java)
+
+    }
+
 }
