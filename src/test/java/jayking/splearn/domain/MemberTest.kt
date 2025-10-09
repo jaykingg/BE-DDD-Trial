@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 class MemberTest {
     lateinit var member: Member
     lateinit var passwordEncoder: PasswordEncoder
-    lateinit var memberCreateRequest: MemberCreateRequest
+    lateinit var memberCreateRequest: MemberRegisterRequest
 
     @BeforeEach
     fun setUp() {
@@ -20,13 +20,13 @@ class MemberTest {
                 return encode(password) == passwordHash
             }
         }
-        memberCreateRequest = MemberCreateRequest("jayking@splearn.kr", "jayking", "secret")
-        member = Member.create(memberCreateRequest, passwordEncoder)
+        memberCreateRequest = MemberRegisterRequest("jayking@splearn.kr", "jayking", "secret")
+        member = Member.register(memberCreateRequest, passwordEncoder)
     }
 
 
     @Test
-    fun create() {
+    fun register() {
         assertThat(member.status).isEqualTo(MemberStatus.PENDING)
     }
 
@@ -103,7 +103,7 @@ class MemberTest {
 
     @Test
     fun invalidEmailTest() {
-        assertThatThrownBy { Member.create(MemberCreateRequest("jayking.kr", "jayking", "secret"), passwordEncoder) }
+        assertThatThrownBy { Member.register(MemberRegisterRequest("jayking.kr", "jayking", "secret"), passwordEncoder) }
             .isInstanceOf(IllegalArgumentException::class.java)
 
     }

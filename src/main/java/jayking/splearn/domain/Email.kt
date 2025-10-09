@@ -1,5 +1,9 @@
 package jayking.splearn.domain
 
+import jakarta.persistence.Embeddable
+import jakarta.persistence.Embedded
+
+@Embeddable
 data class Email(
     val email: String
 ) {
