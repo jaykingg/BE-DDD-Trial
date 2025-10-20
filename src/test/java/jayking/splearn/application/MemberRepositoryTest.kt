@@ -5,6 +5,7 @@ import jayking.splearn.application.required.MemberRepository
 import jayking.splearn.domain.Member
 import jayking.splearn.fixture.MemberFixture.Companion.createPasswordEncoder
 import jayking.splearn.fixture.MemberFixture.Companion.createMemberRegisterRequest
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -18,7 +19,13 @@ class MemberRepositoryTest @Autowired constructor(
     @Test
     fun createMember() {
         val member = Member.register(createMemberRegisterRequest(), createPasswordEncoder())
+
+        assertThat(member.id).isNull()
+
         memberRepository.save(member)
+
+        assertThat(member.id).isNotNull()
+
         entityManager.flush()
     }
 }
