@@ -76,9 +76,9 @@ class MemberTest {
     fun changeNickname() {
         assertThat(member.nickName).isEqualTo("jayking")
 
-        member.changeNickname("ginkyaj")
+        member.changeNickname("mankai")
 
-        assertThat(member.nickName).isEqualTo("ginkyaj")
+        assertThat(member.nickName).isEqualTo("mankai")
     }
 
     @Test
