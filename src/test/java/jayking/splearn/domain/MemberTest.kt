@@ -1,29 +1,21 @@
 package jayking.splearn.domain
 
+import jayking.splearn.fixture.MemberFixture.Companion.createPasswordEncoder
+import jayking.splearn.fixture.MemberFixture.Companion.createMemberRegisterRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class MemberTest {
-    lateinit var member: Member
-    lateinit var passwordEncoder: PasswordEncoder
-    lateinit var memberCreateRequest: MemberRegisterRequest
+    private lateinit var member: Member
+    private lateinit var passwordEncoder: PasswordEncoder
 
     @BeforeEach
     fun setUp() {
-        this.passwordEncoder = object : PasswordEncoder {
-            override fun encode(password: String): String {
-                return password.uppercase()
-            }
-            override fun matches(password: String, passwordHash: String): Boolean {
-                return encode(password) == passwordHash
-            }
-        }
-        memberCreateRequest = MemberRegisterRequest("jayking@splearn.kr", "jayking", "secret")
-        member = Member.register(memberCreateRequest, passwordEncoder)
+        this.passwordEncoder = createPasswordEncoder()
+        member = Member.register(createMemberRegisterRequest(), passwordEncoder)
     }
-
 
     @Test
     fun register() {
@@ -103,9 +95,8 @@ class MemberTest {
 
     @Test
     fun invalidEmailTest() {
-        assertThatThrownBy { Member.register(MemberRegisterRequest("jayking.kr", "jayking", "secret"), passwordEncoder) }
+        assertThatThrownBy { Member.register(createMemberRegisterRequest("invalid email"), passwordEncoder) }
             .isInstanceOf(IllegalArgumentException::class.java)
-
     }
 
 }

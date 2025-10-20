@@ -4,6 +4,8 @@ import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 
@@ -12,25 +14,29 @@ import jakarta.persistence.Table
  */
 @Entity
 @Table(name = "member")
-class Member protected constructor(
+class Member private constructor(
+    email: Email,
+    nickName: String,
+    passwordHash: String,
 ) {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
-        internal set
+        private set
 
     @Embedded
-    lateinit var email: Email
-        internal set
+    var email: Email = email
+        private set
 
-    lateinit var nickName: String
-        internal set
+    var nickName: String = nickName
+        private set
 
-    lateinit var passwordHash: String
-        internal set
+    var passwordHash: String = passwordHash
+        private set
 
     @Enumerated(EnumType.STRING)
-    lateinit var status: MemberStatus
-        internal set
+    var status: MemberStatus = MemberStatus.PENDING
+        private set
 
     fun activate() {
         check(this.status == MemberStatus.PENDING) { "member is not pending" }
@@ -60,15 +66,13 @@ class Member protected constructor(
         return this.status == MemberStatus.ACTIVE
     }
 
-
     companion object {
         fun register(request: MemberRegisterRequest, passwordEncoder: PasswordEncoder): Member {
-            return Member().apply {
-                email = Email(request.email)
-                nickName = request.nickName
-                passwordHash = passwordEncoder.encode(request.password)
-                status = MemberStatus.PENDING
-            }
+            return Member(
+                email = Email(request.email),
+                nickName = request.nickName,
+                passwordHash = passwordEncoder.encode(request.password),
+            )
         }
     }
 }
